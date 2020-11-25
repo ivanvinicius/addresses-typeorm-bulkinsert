@@ -1,9 +1,9 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+
+import statesRoutes from '@modules/states/infra/http/routes/states.routes';
 
 const routes = Router();
 
-routes.get('/', (request: Request, response: Response) => {
-  return response.json({ message: 'get is ok' });
-});
+routes.use('/states', statesRoutes);
 
 export default routes;
