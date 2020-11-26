@@ -3,20 +3,20 @@ import { injectable, inject } from 'tsyringe';
 import State from '../infra/typeorm/entities/State';
 import IStatesRepository from '../repositories/IStatesRepository';
 
+interface IRequest {
+  name: string;
+}
+
 @injectable()
 export default class CreateStateService {
   constructor(
-    @inject('StateRepository')
+    @inject('StatesRepository')
     private stateRepository: IStatesRepository,
   ) {}
 
-  public async execute(name: string): Promise<State | undefined> {
-    const checkStateExists = await this.stateRepository.findByName(name);
-
-    if (checkStateExists) {
-      throw new Error('The state is already registered');
-    }
-
-    return this.stateRepository.create({ name });
+  public async execute(
+    states: IRequest[],
+  ): Promise<State | State[] | undefined> {
+    return this.stateRepository.createMany(states);
   }
 }

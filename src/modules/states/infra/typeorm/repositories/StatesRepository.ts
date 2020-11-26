@@ -11,15 +11,15 @@ export default class StatesRepository implements IStatesRepository {
     this.ormRepository = getRepository(State);
   }
 
-  public async findByName(stateName: string): Promise<State | undefined> {
-    return this.ormRepository.findOne({ where: { name: stateName } });
-  }
+  public async createMany(
+    statesData: ICreateStateDTO[],
+  ): Promise<State[] | undefined> {
+    const states = this.ormRepository.create(
+      statesData.map(({ name }) => ({ name })),
+    );
 
-  public async create(stateData: ICreateStateDTO): Promise<State | undefined> {
-    const state = this.ormRepository.create(stateData);
+    await this.ormRepository.save(states);
 
-    await this.ormRepository.save(state);
-
-    return state;
+    return states;
   }
 }
